@@ -2,7 +2,7 @@
 n_agents = 5
 # number of agents in the population
 # n_agents also equals the number of languages (joint distributions over signals and meanings) in the population.
-n_agents = 6
+
 
 # set language size
 n_meanings = 6
@@ -18,3 +18,4 @@ n_interactions = 10
 
 threshold = 0.9
 # proportion successful interactions an agent needs to have to keep their proposal distribution
+
