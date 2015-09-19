@@ -4,63 +4,27 @@
 # to do next:
 # agents compare the proposal language to their last language and only accept it if it performs better
 
+import setup
+import initialize
+from initialize import languages
 from sketch_functions import *
 import numpy
 import scipy, scipy.stats
 
-# initialize once:
 
-n_agents = 5
-# number of agents in the population
-# n_agents also equals the number of languages (joint distributions over signals and meanings) in the population.
+n_rounds = setup.n_rounds
+n_agents = setup.n_agents
+n_signals = setup.n_signals
+n_meanings = setup.n_meanings
+n_interactions = setup.n_interactions
+threshold = setup.threshold
 
-# set language size
-n_meanings = 6
-n_signals = 10
+successes_per_round = initialize.successes_per_round
+total_cost = initialize.total_cost
+signal_entropy_sums = initialize.signal_entropy_sums
+meaning_entropy_sums = initialize.meaning_entropy_sums
+languages = languages()
 
-n_rounds = 1000
-# each round is composed of n interactions between a pair of agents,
-# who are randomly drawn from the population
-
-n_interactions = 10 
-# number of random interactions that need to occur before agents decide whether 
-# or not to keep their proposal distributions
-
-threshold = 0.9
-# proportion successful interactions an agent needs to have to keep their proposal distribution
-
-# initialize the prior distribution over meanings
-# for starters, just randomly populate pM (no need to normalize yet)
-pM_init = numpy.random.randint(1,100,size=n_meanings)
-
-# give each agent the same, randomly-populated joint distribution over signals and meanings
-languages = []
-init_matrix = random_matrix_maker(n_signals,n_meanings,pM_init)
-for i in range(0,n_agents):
-    # >>> can insert different initial matrices per agent <<<    
-     languages.insert(i,init_matrix)
-
-# other stuff to initialize here:
-total_cost = [0]*n_agents # output of the cost function, per agent in the current round
-
-successes_per_round = [0]*n_rounds # for starters, total number of successes in the current round
-# summed across all agents
-
-# some preliminary things to track for visualizing what this system does:
-# all this is explained further below.
-signal_entropy_sums = [0]*(n_rounds+1)
-meaning_entropy_sums = [0]*(n_rounds+1)
-
-signal_entropies = [0]*n_agents
-for a in range(0,n_agents):
-    signal_entropies[a] = numpy.sum(scipy.stats.entropy(languages[a],base=2))  
-    signal_entropy_sums[0] = numpy.sum(signal_entropies)
-
-meaning_entropies = [0]*n_agents    
-for a in range(0,n_agents):
-    meaning_entropies[a] = numpy.sum(scipy.stats.entropy(numpy.matrix.transpose(languages[a]),base=2))  
-    meaning_entropy_sums[0] = numpy.sum(meaning_entropies)
-    
 
 ################################################################################
 # MAIN LOOP
