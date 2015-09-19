@@ -1,7 +1,10 @@
-
-n_agents = 5
 # number of agents in the population
+n_agents = 5
+
 # n_agents also equals the number of languages (joint distributions over signals and meanings) in the population.
+## NEED IT?  (in this case, we use language to refer to what each individual 'speaks')
+## I wonder about after lots of iterations and divergences -- then looking at clustering similarity of individual's 'languages' into more groups of more global languages
+## That might be where terminology gets tricky
 
 
 # set language size

@@ -6,7 +6,8 @@
 
 import setup
 import initialize
-from initialize import languages
+from initialize import *
+from initialize import successes_per_round
 from sketch_functions import *
 import numpy
 import scipy, scipy.stats
@@ -19,10 +20,11 @@ n_meanings = setup.n_meanings
 n_interactions = setup.n_interactions
 threshold = setup.threshold
 
-successes_per_round = initialize.successes_per_round
-total_cost = initialize.total_cost
-signal_entropy_sums = initialize.signal_entropy_sums
-meaning_entropy_sums = initialize.meaning_entropy_sums
+successes_per_round = successes_per_round()
+total_cost = total_cost()
+signal_entropy_sums = signal_entropy_sums()
+meaning_entropy_sums = meaning_entropy_sums()
+
 languages = languages()
 
 
