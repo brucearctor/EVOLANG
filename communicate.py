@@ -1,14 +1,3 @@
-
-"""
-communicate()
-
-    send()
-    receive()
-    infer()
-    history()
-"""
-
-
 import numpy
 from sketch_functions import get_pM
 

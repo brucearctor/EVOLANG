@@ -28,7 +28,6 @@ signal_entropy_sums = init_signal_entropy_sums(n_rounds)
 meaning_entropy_sums = init_meaning_entropy_sums(n_rounds)
 languages = languages(n_signals,n_meanings,n_agents)
 
-
 ################################################################################
 # MAIN LOOP
 
@@ -92,13 +91,10 @@ for r in range(0,n_rounds):
             cost[receiver] += 1
             total_cost[sender] += 1
             total_cost[receiver] += 1
-         
-            
-                  
+                    
         # end of interactions loop
      
-        
-              
+                
     # use success rating to determine what agents do with their proposal distributions
     # for starters, if >= x% of an agents interactions were successful, they keep the proposal distribution,
     # and if < x% were successful, they don't adopt the proposal distribution (they revert back to their previous language instead).
