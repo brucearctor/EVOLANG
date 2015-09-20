@@ -7,11 +7,11 @@
 import setup
 import initialize
 from initialize import *
-from initialize import successes_per_round
+#from initialize import successes_per_round
+from propose import propose
 from sketch_functions import *
 import numpy
 import scipy, scipy.stats
-
 
 n_rounds = setup.n_rounds
 n_agents = setup.n_agents
@@ -20,12 +20,12 @@ n_meanings = setup.n_meanings
 n_interactions = setup.n_interactions
 threshold = setup.threshold
 
-successes_per_round = successes_per_round()
-total_cost = total_cost()
-signal_entropy_sums = signal_entropy_sums()
-meaning_entropy_sums = meaning_entropy_sums()
-
-languages = languages()
+## THIS COULD BE A SINGLE LINE, but I think this is clearer
+successes_per_round = successes_per_round(n_rounds)
+total_cost = total_cost(n_agents)
+signal_entropy_sums = init_signal_entropy_sums(n_rounds)
+meaning_entropy_sums = init_meaning_entropy_sums(n_rounds)
+languages = languages(n_signals,n_meanings,n_agents)
 
 
 ################################################################################
@@ -40,20 +40,21 @@ for r in range(0,n_rounds):
     print(get_pM(languages[4]))
     print(get_pM(languages[0]))
     
-    ############################################################################
-    # stuff to initialize at start of each round of interactions:
+    cost = init_cost(n_agents)
+    interactions_per_agent = init_interactions_per_agent(n_agents)
+    signal_entropies = init_signal_entropies(n_agents)
+    meaning_entropies = init_meaning_entropies(n_agents)
 
-    cost = [0]*n_agents
-    interactions_per_agent = [0]*n_agents
-    signal_entropies = [0]*n_agents
-    meaning_entropies = [0]*n_agents
+    ## Could also do -->
+    #cost, interactions_per_agent, signal_entropies, meaning_entropies = initalize_round(n_agents)
+    ## But, I think the above is clearer
+
 
     # each agent makes their own proposal distribution
     # see comment on function proposal_matrix_maker() above.
-    proposals = []
-    for i in range(0,n_agents):
-        proposals.insert(i,proposal_matrix_maker(n_signals,n_meanings,languages[i]))
-        
+
+    proposals = propose(n_agents,n_signals,n_meanings,languages)
+    
     ############################################################################
     
     for k in range(0,n_interactions):
@@ -144,7 +145,7 @@ for r in range(0,n_rounds):
         # then sum them so there's one value per language
         meaning_entropies[a] = numpy.sum(scipy.stats.entropy(numpy.matrix.transpose(languages[a]),base=2))  
     # then sum the values for all of the languages in use at that particular round
-    meaning_entropy_sums[r+1] = numpy.sum(meaning_entropies)
+    meaning_entropy_sums[r+1] = numpy.sum([meaning_entropies])
     
     # also, see the max_ent_sum() function above.  It computes the ceiling for this raw sum for any parameter combo.
     
