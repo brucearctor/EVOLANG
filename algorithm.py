@@ -5,10 +5,11 @@
 # agents compare the proposal language to their last language and only accept it if it performs better
 
 import setup
-import initialize
+#import initialize
 from initialize import *
 #from initialize import successes_per_round
-from propose import propose
+from communicate import *
+from propose import *
 from sketch_functions import *
 import numpy
 import scipy, scipy.stats
@@ -40,14 +41,12 @@ for r in range(0,n_rounds):
     print(get_pM(languages[4]))
     print(get_pM(languages[0]))
     
+    ## Could also do the line below, instead, but I think the 4 lines are clearer to read -->
     cost = init_cost(n_agents)
     interactions_per_agent = init_interactions_per_agent(n_agents)
     signal_entropies = init_signal_entropies(n_agents)
     meaning_entropies = init_meaning_entropies(n_agents)
-
-    ## Could also do -->
     #cost, interactions_per_agent, signal_entropies, meaning_entropies = initalize_round(n_agents)
-    ## But, I think the above is clearer
 
 
     # each agent makes their own proposal distribution
@@ -59,28 +58,25 @@ for r in range(0,n_rounds):
     
     for k in range(0,n_interactions):
 
-        # choose two agents at random to speak with one another
-        # one will be the sender and the other will be the receiver.
-        pair = numpy.random.choice(n_agents,2,replace=False)
-        sender = pair[0]
-        receiver = pair[1]
+        # NEED TO UNDERSTAND MORE ABOUT HOW MANY INTERACTIONS per pair, per person, etc.
+        sender,receiver=find_sender_and_receiver(n_agents)
         
-        # sender chooses a signal-meaning pair from their proposal distribution.
-        # for starters, it's chosen randomly, weighted by the joint probability over all signal-meanings pairs
-        # (couldn't figure out how to do a random sample from a 2D array, so did this in two steps)
-        # 1) choose meaning first:
-        weights = get_pM(proposals[sender])
-        meaning_intended = numpy.random.choice(range(0,n_meanings),p=weights)
-        # 2) then choose a signal for this meaning:
-        prelim_weights = proposals[sender][:,meaning_intended]
-        weights = prelim_weights/numpy.sum(prelim_weights)
-        signal_produced = numpy.random.choice(range(0,n_signals),p=weights)
-        # >>> option: there could be noise so that the signal received isn't necessarily the signal produced.
-        
+        signal_produced, meaning_intended = produce_signal(sender,proposals,n_meanings,n_signals)
+
         # receiver infers a meaning for that signal
         # by randomly selecting a meaning from their proposal distribution, 
         # according to their meaning weights for the signal they received.
         signal_received = signal_produced
+        ## I WONDER WHETHER WE WANT TO INTRODUCE NOISE TO THE SIGNAL, SO LEAVE THIS OUTSIDE OF FUNCTION
+        ## LIKE a function for infer signal, which could have various types of noise
+
+        meaning_inferred = infer_meaning(receiver,proposals,signal_received,n_meanings)
+        # update success rating
+        # for starters, the cost function is just tally of successful interactions,
+        # but it'll probably be some negative cost later
+        interactions_per_agent[sender] += 1
+        interactions_per_agent[receiver] += 1
+
         prelim_weights = proposals[receiver][signal_received]
         weights = prelim_weights/numpy.sum(prelim_weights)
         meaning_inferred = numpy.random.choice(range(0,n_meanings),p=weights)
