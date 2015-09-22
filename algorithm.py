@@ -73,12 +73,6 @@ for r in range(0,n_rounds):
         # update success rating
         # for starters, the cost function is just tally of successful interactions,
         # but it'll probably be some negative cost later
-        interactions_per_agent[sender] += 1
-        interactions_per_agent[receiver] += 1
-
-        prelim_weights = proposals[receiver][signal_received]
-        weights = prelim_weights/numpy.sum(prelim_weights)
-        meaning_inferred = numpy.random.choice(range(0,n_meanings),p=weights)
              
         # update success rating
         # for starters, the cost function is just tally of successful interactions,

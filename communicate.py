@@ -30,7 +30,7 @@ def infer_meaning(receiver,proposals,signal_received,n_meanings):
     # receiver infers a meaning for that signal
     # by randomly selecting a meaning from their proposal distribution, 
     # according to their meaning weights for the signal they received.
-    signal_received = signal_produced
+    
     prelim_weights = proposals[receiver][signal_received]
     weights = prelim_weights/numpy.sum(prelim_weights)
     meaning_inferred = numpy.random.choice(range(0,n_meanings),p=weights)
