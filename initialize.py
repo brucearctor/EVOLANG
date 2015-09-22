@@ -54,7 +54,7 @@ def init_meaning_entropies(n_agents):
 
 ### PROBABLY DELETE THIS
 def initialize_round(n_agents):
-	return(init_cost(n_agents),init_interactions_per_agent(n_agents),signal_entropies(n_agents),meaning_entropies(n_agents))
+	return(init_cost(n_agents),init_interactions_per_agent(n_agents),init_signal_entropies(n_agents),init_meaning_entropies(n_agents))
 
 
 

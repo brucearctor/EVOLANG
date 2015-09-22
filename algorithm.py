@@ -5,9 +5,7 @@
 # agents compare the proposal language to their last language and only accept it if it performs better
 
 import setup
-#import initialize
 from initialize import *
-#from initialize import successes_per_round
 from communicate import *
 from propose import *
 from sketch_functions import *
@@ -40,17 +38,15 @@ for r in range(0,n_rounds):
     print(get_pM(languages[4]))
     print(get_pM(languages[0]))
     
-    ## Could also do the line below, instead, but I think the 4 lines are clearer to read -->
-    cost = init_cost(n_agents)
-    interactions_per_agent = init_interactions_per_agent(n_agents)
-    signal_entropies = init_signal_entropies(n_agents)
-    meaning_entropies = init_meaning_entropies(n_agents)
-    #cost, interactions_per_agent, signal_entropies, meaning_entropies = initalize_round(n_agents)
-
+    ## 4 Lines or 1 ??? -->
+    ##cost = init_cost(n_agents)
+    ##interactions_per_agent = init_interactions_per_agent(n_agents)
+    ##signal_entropies = init_signal_entropies(n_agents)
+    ##meaning_entropies = init_meaning_entropies(n_agents)
+    cost, interactions_per_agent, signal_entropies, meaning_entropies = initialize_round(n_agents)
 
     # each agent makes their own proposal distribution
-    # see comment on function proposal_matrix_maker() above.
-
+    # see comment on function proposal_matrix_maker() in sketch_functions.py
     proposals = propose(n_agents,n_signals,n_meanings,languages)
     
     ############################################################################
@@ -62,17 +58,14 @@ for r in range(0,n_rounds):
         
         signal_produced, meaning_intended = produce_signal(sender,proposals,n_meanings,n_signals)
 
+        ## I WONDER WHETHER WE WANT TO INTRODUCE NOISE TO THE SIGNAL, SO LEAVE THIS OUTSIDE OF FUNCTION
+        ## LIKE a function for infer signal, which could have various types of noise
+        signal_received = signal_produced
+
         # receiver infers a meaning for that signal
         # by randomly selecting a meaning from their proposal distribution, 
         # according to their meaning weights for the signal they received.
-        signal_received = signal_produced
-        ## I WONDER WHETHER WE WANT TO INTRODUCE NOISE TO THE SIGNAL, SO LEAVE THIS OUTSIDE OF FUNCTION
-        ## LIKE a function for infer signal, which could have various types of noise
-
         meaning_inferred = infer_meaning(receiver,proposals,signal_received,n_meanings)
-        # update success rating
-        # for starters, the cost function is just tally of successful interactions,
-        # but it'll probably be some negative cost later
              
         # update success rating
         # for starters, the cost function is just tally of successful interactions,
@@ -92,6 +85,11 @@ for r in range(0,n_rounds):
     # use success rating to determine what agents do with their proposal distributions
     # for starters, if >= x% of an agents interactions were successful, they keep the proposal distribution,
     # and if < x% were successful, they don't adopt the proposal distribution (they revert back to their previous language instead).
+    
+    ## Definition of success?
+    ## Objective, or subjective to receiver
+    ## Room for corrections?
+    ## If receiver thinks they understand meaning?
     decision_to_keep = [0]*n_agents # true = keep proposal, false = revert
     for i in range(0,n_agents):
         if cost[i] > 0: # to prevent divisions by zero.
