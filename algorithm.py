@@ -11,6 +11,7 @@ from propose import *
 from sketch_functions import *
 import numpy
 import scipy, scipy.stats
+from evaluate import *
 
 n_rounds = setup.n_rounds
 n_agents = setup.n_agents
@@ -90,6 +91,7 @@ for r in range(0,n_rounds):
     ## Objective, or subjective to receiver
     ## Room for corrections?
     ## If receiver thinks they understand meaning?
+    """
     decision_to_keep = [0]*n_agents # true = keep proposal, false = revert
     for i in range(0,n_agents):
         if cost[i] > 0: # to prevent divisions by zero.
@@ -104,11 +106,13 @@ for r in range(0,n_rounds):
     for i in range(0,n_agents):
         if decision_to_keep[i] == "true":
             languages[i] = proposals[i]
-    
+    """
+
+    languages = evaluate(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
 
     ############################################################################
     # analyses per round
-    
+
     # the raw tally of successes by round, summed over all agents.
     # the max number of successes per round can be as high as n_interactions*n_agents.
     successes_per_round[r] = numpy.sum(cost)
