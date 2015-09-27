@@ -18,7 +18,7 @@ n_agents = setup.n_agents
 n_signals = setup.n_signals
 n_meanings = setup.n_meanings
 n_interactions = setup.n_interactions
-threshold = setup.threshold
+#threshold = setup.threshold
 
 ## THIS COULD BE A SINGLE LINE, but I think this is clearer
 successes_per_round = successes_per_round(n_rounds)
@@ -26,6 +26,8 @@ total_cost = total_cost(n_agents)
 signal_entropy_sums = init_signal_entropy_sums(n_rounds)
 meaning_entropy_sums = init_meaning_entropy_sums(n_rounds)
 languages = languages(n_signals,n_meanings,n_agents)
+threshold = init_threshold(n_agents,setup.threshold)
+#last_languages = languages
 
 ################################################################################
 # MAIN LOOP
@@ -91,24 +93,7 @@ for r in range(0,n_rounds):
     ## Objective, or subjective to receiver
     ## Room for corrections?
     ## If receiver thinks they understand meaning?
-    """
-    decision_to_keep = [0]*n_agents # true = keep proposal, false = revert
-    for i in range(0,n_agents):
-        if cost[i] > 0: # to prevent divisions by zero.
-            if cost[i]/float(interactions_per_agent[i]) >= threshold:
-                decision_to_keep[i] = "true"
-            else:
-                decision_to_keep[i] = "false"
-        else:
-            decision_to_keep[i] = "false"
-                        
-    # update agents' languages
-    for i in range(0,n_agents):
-        if decision_to_keep[i] == "true":
-            languages[i] = proposals[i]
-    """
-
-    languages = evaluate(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
+    languages,threshold = evaluate(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
 
     ############################################################################
     # analyses per round

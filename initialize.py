@@ -19,6 +19,7 @@ def languages(n_signals,n_meanings,n_agents):
 	return(languages)
 
 
+
 # other stuff to initialize here:
 def total_cost(n_agents):
 	return([0]*n_agents)
@@ -34,6 +35,15 @@ def init_signal_entropy_sums(n_rounds):
 
 def init_meaning_entropy_sums(n_rounds):
 	return([0]*(n_rounds+1))
+
+
+def init_threshold(n_agents,threshold):
+	threshold_array = []
+	for i in range(0,n_agents):
+		threshold_array.append(threshold)
+	return(threshold_array)
+
+
 
 
 
