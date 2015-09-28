@@ -44,6 +44,11 @@ def init_threshold(n_agents,threshold):
 	return(threshold_array)
 
 
+def init_threshold_last_round(n_agents):
+	threshold_last_round_array = []
+	for i in range(0,n_agents):
+		threshold_last_round_array.append(0)
+	return(threshold_last_round_array)
 
 
 

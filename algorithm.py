@@ -27,6 +27,8 @@ signal_entropy_sums = init_signal_entropy_sums(n_rounds)
 meaning_entropy_sums = init_meaning_entropy_sums(n_rounds)
 languages = languages(n_signals,n_meanings,n_agents)
 threshold = init_threshold(n_agents,setup.threshold)
+threshold_last_round = threshold
+#threshold_last_round = init_threshold_last_round(n_agents)
 #last_languages = languages
 
 ################################################################################
@@ -93,7 +95,7 @@ for r in range(0,n_rounds):
     ## Objective, or subjective to receiver
     ## Room for corrections?
     ## If receiver thinks they understand meaning?
-    languages,threshold = evaluate(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
+    languages,threshold_last_round = evaluate_based_on_prior_round(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
 
     ############################################################################
     # analyses per round
