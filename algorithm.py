@@ -1,8 +1,3 @@
-# changes from last version:
-# p(M) is fixed now: agents do not propose changes to the meaning space
-
-# to do next:
-# agents compare the proposal language to their last language and only accept it if it performs better
 
 import setup
 from initialize import *
@@ -13,12 +8,14 @@ import numpy
 import scipy, scipy.stats
 from evaluate import *
 
-n_rounds = setup.n_rounds
-n_agents = setup.n_agents
-n_signals = setup.n_signals
-n_meanings = setup.n_meanings
-n_interactions = setup.n_interactions
-#threshold = setup.threshold
+# I changed this because I have to restart canopy for it to read updates to the setup file
+# dunno why, I've gotta look into that and fix it.
+n_rounds = 1000
+n_agents = 5
+n_signals = 3
+n_meanings = 4
+n_interactions = 30
+initial_threshold = 0.9
 
 ## THIS COULD BE A SINGLE LINE, but I think this is clearer
 successes_per_round = successes_per_round(n_rounds)
@@ -26,7 +23,7 @@ total_cost = total_cost(n_agents)
 signal_entropy_sums = init_signal_entropy_sums(n_rounds)
 meaning_entropy_sums = init_meaning_entropy_sums(n_rounds)
 languages = languages(n_signals,n_meanings,n_agents)
-threshold = init_threshold(n_agents,setup.threshold)
+threshold = init_threshold(n_agents,initial_threshold)
 threshold_last_round = threshold
 #threshold_last_round = init_threshold_last_round(n_agents)
 #last_languages = languages
@@ -37,11 +34,57 @@ threshold_last_round = threshold
 for r in range(0,n_rounds):
     
     #print("round: " +str(r))
-    print(get_pM(languages[1]))
-    print(get_pM(languages[2]))
-    print(get_pM(languages[3]))
-    print(get_pM(languages[4]))
-    print(get_pM(languages[0]))
+    #print(threshold)
+    
+    if(r==0):
+        print("the random initial language:")
+        print(languages[0])
+        print("round: " +str(r))
+        print("pMs:")
+        print(get_pM(languages[1]))
+        print(get_pM(languages[2]))
+        print(get_pM(languages[3]))
+        print(get_pM(languages[4]))
+        print(get_pM(languages[0]))
+        print("pSs:")
+        print(get_pS(languages[1]))
+        print(get_pS(languages[2]))
+        print(get_pS(languages[3]))
+        print(get_pS(languages[4]))
+        print(get_pS(languages[0]))
+
+        
+    if(r==1):
+        print("round: " +str(r))
+        print("pMs:")
+        print(get_pM(languages[1]))
+        print(get_pM(languages[2]))
+        print(get_pM(languages[3]))
+        print(get_pM(languages[4]))
+        print(get_pM(languages[0]))
+        print("pSs:")
+        print(get_pS(languages[1]))
+        print(get_pS(languages[2]))
+        print(get_pS(languages[3]))
+        print(get_pS(languages[4]))
+        print(get_pS(languages[0]))
+    
+    if(r==n_rounds-1):
+        print("round: " +str(r))
+        print("pMs:")
+        print(get_pM(languages[1]))
+        print(get_pM(languages[2]))
+        print(get_pM(languages[3]))
+        print(get_pM(languages[4]))
+        print(get_pM(languages[0]))
+        print("pSs:")
+        print(get_pS(languages[1]))
+        print(get_pS(languages[2]))
+        print(get_pS(languages[3]))
+        print(get_pS(languages[4]))
+        print(get_pS(languages[0]))
+    
+    # languages[1][:row] to get a dist over one signal (signal[row])
     
     ## 4 Lines or 1 ??? -->
     ##cost = init_cost(n_agents)
@@ -51,8 +94,10 @@ for r in range(0,n_rounds):
     cost, interactions_per_agent, signal_entropies, meaning_entropies = initialize_round(n_agents)
 
     # each agent makes their own proposal distribution
-    # see comment on function proposal_matrix_maker() in sketch_functions.py
+    
+    # PROPOSE
     proposals = propose(n_agents,n_signals,n_meanings,languages)
+    #proposals = propose_pMfixed(n_agents,n_signals,n_meanings,languages)
     
     ############################################################################
     
@@ -95,7 +140,12 @@ for r in range(0,n_rounds):
     ## Objective, or subjective to receiver
     ## Room for corrections?
     ## If receiver thinks they understand meaning?
-    languages,threshold_last_round = evaluate_based_on_prior_round(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
+    
+    # EVALUATE
+    languages,threshold = evaluate_fixed_threshold(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
+    #languages,threshold_last_round = evaluate(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
+    #languages,threshold = evaluate_based_on_prior_round(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
+
 
     ############################################################################
     # analyses per round

@@ -13,14 +13,14 @@ n_agents = 5
 ## That might be where terminology gets tricky
 
 # set language size
-n_meanings = 6
-n_signals = 10
+n_meanings = 5
+n_signals = 5
 
 n_rounds = 1000
 # each round is composed of n interactions between a pair of agents,
 # who are randomly drawn from the population
 
-n_interactions = 10 
+n_interactions = 100 
 # number of random interactions that need to occur before agents decide whether 
 # or not to keep their proposal distributions
 

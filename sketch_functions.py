@@ -47,6 +47,24 @@ def proposal_matrix_maker(n_signals,n_meanings,old_matrix):
     new_matrix /= numpy.sum(new_matrix)
     return new_matrix
 
+def proposal_matrix_maker_pMfixed(n_signals,n_meanings,old_matrix):
+    # how an agent chooses a particular deviation from their current language
+    # this deviation will be referred to as a "proposal distribution"
+    # for starters, they change it with a uniform random delta function
+    # 1) so nothing becomes negative
+    # 2) so all entries still sum to one 
+    # 3) and pM remains the same
+    delta_max = (1.0/(n_signals*n_meanings))/10
+    delta_matrix = numpy.random.uniform(0,delta_max,size=(n_signals, n_meanings))
+    # normalize the columns
+    delta_matrix /=  delta_matrix.sum(axis=0)[numpy.newaxis,:]
+    # multiply each cell by the desired sum (which is pM, so that pM stays the same)
+    delta_matrix *= get_pM(old_matrix)
+    # add the delta matrix and normalize so whole matrix sums to one
+    new_matrix = old_matrix+delta_matrix
+    new_matrix /= numpy.sum(new_matrix)
+    return new_matrix
+
 def max_ent_sum(n_signals,n_meanings):
     # I'll be using a un-averaged sum of signal entropies (and meaning entropies) metric 
     # as a window into how this system is changing over time. 
