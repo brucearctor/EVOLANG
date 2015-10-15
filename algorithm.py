@@ -7,6 +7,8 @@ from sketch_functions import *
 import numpy
 import scipy, scipy.stats
 from evaluate import *
+from copy import deepcopy
+from KL_divergence import *
 
 # I changed this because I have to restart canopy for it to read updates to the setup file
 # dunno why, I've gotta look into that and fix it.
@@ -14,8 +16,8 @@ n_rounds = 1000
 n_agents = 5
 n_signals = 3
 n_meanings = 4
-n_interactions = 30
-initial_threshold = 0.9
+n_interactions = 10
+initial_threshold = 0
 
 ## THIS COULD BE A SINGLE LINE, but I think this is clearer
 successes_per_round = successes_per_round(n_rounds)

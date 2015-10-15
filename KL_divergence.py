@@ -19,7 +19,7 @@
 # Where the model has probability zero, the data must have probability zero.  An error will be raised if this isn't the case.
 # ln(0) is computed as 0 - wikipedia says 0*ln(0) can be computed as 0.  Is this any different than doing ln(0)=0?
 
-import numpy as np
+import numpy
 import math
 import sys
 
@@ -43,7 +43,7 @@ def KL_two_matrices(data_matrix, model_matrix):
 		#print "row: " + str(row)
 		DKLs.append(KL_two_arrays(data_matrix[row], model_matrix[row]))
 	#print DKLs # print each KL divergence per row
-	return np.sum(DKLs)
+	return numpy.sum(DKLs)
 
 # calculates KL divergence of model_matrix[i] from data_matrix[i] (paired rows) in nats
 def KL_two_arrays(data_array, model_array):
@@ -77,7 +77,7 @@ def KL_two_arrays(data_array, model_array):
 		elif data_array[element] == 0 and model_array[element] != 0:
 			running_sum = running_sum + 0
 		else: 
-			running_sum = running_sum + ( data_array[element] * np.log(data_array[element] / model_array[element]) )
+			running_sum = running_sum + ( data_array[element] * numpy.log(data_array[element] / model_array[element]) )
 	
 	return running_sum
 
