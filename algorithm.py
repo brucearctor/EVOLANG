@@ -1,4 +1,3 @@
-
 import setup
 from initialize import *
 from communicate import *
@@ -14,8 +13,8 @@ from KL_divergence import *
 # dunno why, I've gotta look into that and fix it.
 n_rounds = 1000
 n_agents = 5
-n_signals = 3
-n_meanings = 4
+n_signals = 10
+n_meanings = 7
 n_interactions = 10
 initial_threshold = 0
 
@@ -37,10 +36,11 @@ for r in range(0,n_rounds):
     
     #print("round: " +str(r))
     #print(threshold)
-    
-    if(r==0):
-        print("the random initial language:")
-        print(languages[0])
+    if(r==0 or r==1 or r==n_rounds-1):
+        if(r==0):
+            print("the random initial language:")
+            print(languages[0])
+        print("")
         print("round: " +str(r))
         print("pMs:")
         print(get_pM(languages[1]))
@@ -55,37 +55,6 @@ for r in range(0,n_rounds):
         print(get_pS(languages[4]))
         print(get_pS(languages[0]))
 
-        
-    if(r==1):
-        print("round: " +str(r))
-        print("pMs:")
-        print(get_pM(languages[1]))
-        print(get_pM(languages[2]))
-        print(get_pM(languages[3]))
-        print(get_pM(languages[4]))
-        print(get_pM(languages[0]))
-        print("pSs:")
-        print(get_pS(languages[1]))
-        print(get_pS(languages[2]))
-        print(get_pS(languages[3]))
-        print(get_pS(languages[4]))
-        print(get_pS(languages[0]))
-    
-    if(r==n_rounds-1):
-        print("round: " +str(r))
-        print("pMs:")
-        print(get_pM(languages[1]))
-        print(get_pM(languages[2]))
-        print(get_pM(languages[3]))
-        print(get_pM(languages[4]))
-        print(get_pM(languages[0]))
-        print("pSs:")
-        print(get_pS(languages[1]))
-        print(get_pS(languages[2]))
-        print(get_pS(languages[3]))
-        print(get_pS(languages[4]))
-        print(get_pS(languages[0]))
-    
     # languages[1][:row] to get a dist over one signal (signal[row])
     
     ## 4 Lines or 1 ??? -->
