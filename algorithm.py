@@ -1,4 +1,4 @@
-import setup
+import parameter_setup
 from initialize import *
 from communicate import *
 from propose import *
@@ -6,17 +6,17 @@ from sketch_functions import *
 import numpy
 import scipy, scipy.stats
 from evaluate import *
-from copy import deepcopy
-from KL_divergence import *
+#from copy import deepcopy
+#from KL_divergence import *
 
 # I changed this because I have to restart canopy for it to read updates to the setup file
 # dunno why, I've gotta look into that and fix it.
-n_rounds = 1000
-n_agents = 5
-n_signals = 10
-n_meanings = 7
-n_interactions = 10
-initial_threshold = 0
+n_rounds = parameter_setup.n_rounds
+n_agents = parameter_setup.n_agents
+n_signals = parameter_setup.n_signals
+n_meanings = parameter_setup.n_meanings
+n_interactions = parameter_setup.n_interactions
+initial_threshold = parameter_setup.threshold
 
 ## THIS COULD BE A SINGLE LINE, but I think this is clearer
 successes_per_round = successes_per_round(n_rounds)
@@ -32,12 +32,15 @@ threshold_last_round = threshold
 ################################################################################
 # MAIN LOOP
 
+last_round = n_rounds-1
+
 for r in range(0,n_rounds):
     
     #print("round: " +str(r))
     #print(threshold)
-    if(r==0 or r==1 or r==n_rounds-1):
+    if(r==0 or r==1 or r==last_round):
         if(r==0):
+            print("")
             print("the random initial language:")
             print(languages[0])
         print("")
