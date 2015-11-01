@@ -30,4 +30,4 @@ threshold = 0.0
 
 # What sort of logging?
 # for first 2 rounds and last, use:  'stuff'
-output = 'stuff'
+logging = 'stuff'
