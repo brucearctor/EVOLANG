@@ -4,7 +4,7 @@
 
 
 # number of agents in the population
-n_agents = 5
+n_agents = 500
 
 # n_agents also equals the number of languages (joint distributions over signals and meanings) in the population.
 
@@ -13,8 +13,8 @@ n_agents = 5
 ## That might be where terminology gets tricky
 
 # set language size
-n_meanings = 5
-n_signals = 5
+n_meanings = 10
+n_signals = 10
 
 n_rounds = 1000
 # each round is composed of n interactions between a pair of agents,
@@ -27,3 +27,7 @@ n_interactions = 100
 threshold = 0.0
 # proportion successful interactions an agent needs to have to keep their proposal distribution
 
+
+# What sort of logging?
+# for first 2 rounds and last, use:  'stuff'
+output = 'stuff'

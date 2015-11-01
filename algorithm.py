@@ -1,3 +1,5 @@
+
+## Should more specifically import (instead of *) ??
 import parameter_setup
 from initialize import *
 from communicate import *
@@ -9,14 +11,13 @@ from evaluate import *
 #from copy import deepcopy
 #from KL_divergence import *
 
-# I changed this because I have to restart canopy for it to read updates to the setup file
-# dunno why, I've gotta look into that and fix it.
 n_rounds = parameter_setup.n_rounds
 n_agents = parameter_setup.n_agents
 n_signals = parameter_setup.n_signals
 n_meanings = parameter_setup.n_meanings
 n_interactions = parameter_setup.n_interactions
 initial_threshold = parameter_setup.threshold
+output = parameter_setup.output
 
 ## THIS COULD BE A SINGLE LINE, but I think this is clearer
 successes_per_round = successes_per_round(n_rounds)
@@ -26,8 +27,7 @@ meaning_entropy_sums = init_meaning_entropy_sums(n_rounds)
 languages = languages(n_signals,n_meanings,n_agents)
 threshold = init_threshold(n_agents,initial_threshold)
 threshold_last_round = threshold
-#threshold_last_round = init_threshold_last_round(n_agents)
-#last_languages = languages
+
 
 ################################################################################
 # MAIN LOOP
@@ -38,28 +38,21 @@ for r in range(0,n_rounds):
     
     #print("round: " +str(r))
     #print(threshold)
-    if(r==0 or r==1 or r==last_round):
-        if(r==0):
+    if output == 'stuff':
+        if(r==0 or r==1 or r==last_round):
+            if(r==0):
+                print("")
+                print("the random initial language:")
+                print(languages[0])
             print("")
-            print("the random initial language:")
-            print(languages[0])
-        print("")
-        print("round: " +str(r))
-        print("pMs:")
-        print(get_pM(languages[1]))
-        print(get_pM(languages[2]))
-        print(get_pM(languages[3]))
-        print(get_pM(languages[4]))
-        print(get_pM(languages[0]))
-        print("pSs:")
-        print(get_pS(languages[1]))
-        print(get_pS(languages[2]))
-        print(get_pS(languages[3]))
-        print(get_pS(languages[4]))
-        print(get_pS(languages[0]))
+            print("round: " +str(r))
+            print("pMs:")
+            for i in range(0,5):
+                print(get_pM(languages[i]))
+            print("pSs:")
+            for i in range(0,5):
+                print(get_pM(languages[i]))
 
-    # languages[1][:row] to get a dist over one signal (signal[row])
-    
     ## 4 Lines or 1 ??? -->
     ##cost = init_cost(n_agents)
     ##interactions_per_agent = init_interactions_per_agent(n_agents)
@@ -70,8 +63,8 @@ for r in range(0,n_rounds):
     # each agent makes their own proposal distribution
     
     # PROPOSE
-    proposals = propose(n_agents,n_signals,n_meanings,languages)
-    #proposals = propose_pMfixed(n_agents,n_signals,n_meanings,languages)
+    #proposals = propose(n_agents,n_signals,n_meanings,languages)
+    proposals = propose_pMfixed(n_agents,n_signals,n_meanings,languages)
     
     ############################################################################
     
