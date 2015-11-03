@@ -1,8 +1,10 @@
+from multiprocessing import Pool
+p = Pool(5)
 
 ## Should more specifically import (instead of *) ??
 import parameter_setup
 from initialize import *
-from communicate import *
+from communicate import communication
 from propose import *
 from sketch_functions import *
 import numpy
@@ -17,7 +19,7 @@ n_signals = parameter_setup.n_signals
 n_meanings = parameter_setup.n_meanings
 n_interactions = parameter_setup.n_interactions
 initial_threshold = parameter_setup.threshold
-output = parameter_setup.output
+logging = parameter_setup.logging
 
 ## THIS COULD BE A SINGLE LINE, but I think this is clearer
 successes_per_round = successes_per_round(n_rounds)
@@ -32,15 +34,15 @@ threshold_last_round = threshold
 ################################################################################
 # MAIN LOOP
 
-last_round = n_rounds-1
+final_round_number = n_rounds-1
 
 for r in range(0,n_rounds):
     
     #print("round: " +str(r))
     #print(threshold)
-    if output == 'stuff':
-        if(r==0 or r==1 or r==last_round):
-            if(r==0):
+    if logging == 'stuff':
+        if(r == 0 or r == 1 or r == final_round_number):
+            if r == 0:
                 print("")
                 print("the random initial language:")
                 print(languages[0])
@@ -53,23 +55,19 @@ for r in range(0,n_rounds):
             for i in range(0,5):
                 print(get_pM(languages[i]))
 
-    ## 4 Lines or 1 ??? -->
-    ##cost = init_cost(n_agents)
-    ##interactions_per_agent = init_interactions_per_agent(n_agents)
-    ##signal_entropies = init_signal_entropies(n_agents)
-    ##meaning_entropies = init_meaning_entropies(n_agents)
     cost, interactions_per_agent, signal_entropies, meaning_entropies = initialize_round(n_agents)
 
     # each agent makes their own proposal distribution
     
     # PROPOSE
-    #proposals = propose(n_agents,n_signals,n_meanings,languages)
     proposals = propose_pMfixed(n_agents,n_signals,n_meanings,languages)
-    
+
     ############################################################################
     
-    for k in range(0,n_interactions):
 
+
+    for k in range(0,n_interactions):
+        """
         # NEED TO UNDERSTAND MORE ABOUT HOW MANY INTERACTIONS per pair, per person, etc.
         sender,receiver=find_sender_and_receiver(n_agents)
         
@@ -95,7 +93,8 @@ for r in range(0,n_rounds):
             cost[receiver] += 1
             total_cost[sender] += 1
             total_cost[receiver] += 1
-                    
+        """
+        cost,total_cost,interactions_per_agent = communication(interactions_per_agent,n_agents,proposals,n_meanings,n_signals,cost,total_cost)        
         # end of interactions loop
      
                 
@@ -109,9 +108,9 @@ for r in range(0,n_rounds):
     ## If receiver thinks they understand meaning?
     
     # EVALUATE
-    languages,threshold = evaluate_fixed_threshold(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
+    #languages,threshold = evaluate_fixed_threshold(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
     #languages,threshold_last_round = evaluate(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
-    #languages,threshold = evaluate_based_on_prior_round(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
+    languages,threshold = evaluate_based_on_prior_round(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
 
 
     ############################################################################

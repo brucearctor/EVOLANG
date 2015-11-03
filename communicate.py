@@ -36,3 +36,32 @@ def infer_meaning(receiver,proposals,signal_received,n_meanings):
     meaning_inferred = numpy.random.choice(range(0,n_meanings),p=weights)
     return(meaning_inferred)
 
+
+def communication(interactions_per_agent,n_agents,proposals,n_meanings,n_signals,cost,total_cost):
+
+    sender,receiver=find_sender_and_receiver(n_agents)
+    
+    signal_produced, meaning_intended = produce_signal(sender,proposals,n_meanings,n_signals)
+
+    ## I WONDER WHETHER WE WANT TO INTRODUCE NOISE TO THE SIGNAL, SO LEAVE THIS OUTSIDE OF FUNCTION
+    ## LIKE a function for infer signal, which could have various types of noise
+    signal_received = signal_produced
+
+    # receiver infers a meaning for that signal
+    # by randomly selecting a meaning from their proposal distribution, 
+    # according to their meaning weights for the signal they received.
+    meaning_inferred = infer_meaning(receiver,proposals,signal_received,n_meanings)
+         
+    # update success rating
+    # for starters, the cost function is just tally of successful interactions,
+    # but it'll probably be some negative cost later
+    interactions_per_agent[sender] += 1
+    interactions_per_agent[receiver] += 1
+    
+    if meaning_intended == meaning_inferred:
+        cost[sender] += 1
+        cost[receiver] += 1
+        total_cost[sender] += 1
+        total_cost[receiver] += 1
+
+    return(cost,total_cost,interactions_per_agent)

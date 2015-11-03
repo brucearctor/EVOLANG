@@ -20,8 +20,8 @@ n_rounds = 1000
 # each round is composed of n interactions between a pair of agents,
 # who are randomly drawn from the population
 
-n_interactions = 100 
-# number of random interactions that need to occur before agents decide whether 
+n_interactions = 40 
+# number of random interactions that occur before agents decide whether 
 # or not to keep their proposal distributions
 
 threshold = 0.0
