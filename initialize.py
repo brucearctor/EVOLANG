@@ -1,4 +1,3 @@
-
 import numpy
 from sketch_functions import random_matrix_maker
 
@@ -67,10 +66,30 @@ def init_meaning_entropies(n_agents):
 
 
 
+
+
 ### PROBABLY DELETE THIS
 def initialize_round(n_agents):
 	return(init_cost(n_agents),init_interactions_per_agent(n_agents),init_signal_entropies(n_agents),init_meaning_entropies(n_agents))
 
 
+
+
+
+def init_parrallel(n_agents,n_rounds):
+
+    cost = {}
+    #total_cost = {}
+    interactions_per_agent = {}
+    #meaning_entropies = {}
+    #signal_entropies = {}
+
+    for i in range(0,n_rounds):
+		cost[i] = init_cost(n_agents)
+		interactions_per_agent[i] = init_interactions_per_agent(n_agents)
+		#signal_entropies[i] = init_signal_entropies(n_agents)
+		#meaning_entropies[i] = init_meaning_entropy_sums(n_agents)
+
+    return(cost,interactions_per_agent)
 
 

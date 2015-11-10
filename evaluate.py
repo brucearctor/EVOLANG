@@ -1,5 +1,3 @@
-
-
 def evaluate_based_on_prior_round(n_agents,cost,interactions_per_agent,languages,threshold,proposals):
     decision_to_keep = [0]*n_agents # true = keep proposal, false = revert
     for i in range(0,n_agents):

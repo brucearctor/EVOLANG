@@ -4,7 +4,7 @@
 
 
 # number of agents in the population
-n_agents = 500
+n_agents = 100
 
 # n_agents also equals the number of languages (joint distributions over signals and meanings) in the population.
 
@@ -20,7 +20,7 @@ n_rounds = 1000
 # each round is composed of n interactions between a pair of agents,
 # who are randomly drawn from the population
 
-n_interactions = 40 
+n_interactions = 50
 # number of random interactions that occur before agents decide whether 
 # or not to keep their proposal distributions
 
@@ -31,3 +31,17 @@ threshold = 0.0
 # What sort of logging?
 # for first 2 rounds and last, use:  'stuff'
 logging = 'stuff'
+
+
+# which propose
+proposal_protocol = "pm_fixed"
+
+
+# which communicate
+communication_protocol = "original"
+
+# which evaluate
+evaluation_protocol = "fixed_threshold"
+
+
+

@@ -1,5 +1,5 @@
-from multiprocessing import Pool
-p = Pool(5)
+
+import multiprocessing
 
 ## Should more specifically import (instead of *) ??
 import parameter_setup
@@ -12,6 +12,7 @@ import scipy, scipy.stats
 from evaluate import *
 #from copy import deepcopy
 #from KL_divergence import *
+from parrallel_try import A
 
 n_rounds = parameter_setup.n_rounds
 n_agents = parameter_setup.n_agents
@@ -20,6 +21,9 @@ n_meanings = parameter_setup.n_meanings
 n_interactions = parameter_setup.n_interactions
 initial_threshold = parameter_setup.threshold
 logging = parameter_setup.logging
+proposal_protocol = parameter_setup.proposal_protocol
+communication_protocol = parameter_setup.communication_protocol
+evaluation_protocol = parameter_setup.evaluation_protocol
 
 ## THIS COULD BE A SINGLE LINE, but I think this is clearer
 successes_per_round = successes_per_round(n_rounds)
@@ -29,7 +33,6 @@ meaning_entropy_sums = init_meaning_entropy_sums(n_rounds)
 languages = languages(n_signals,n_meanings,n_agents)
 threshold = init_threshold(n_agents,initial_threshold)
 threshold_last_round = threshold
-
 
 ################################################################################
 # MAIN LOOP
@@ -55,49 +58,34 @@ for r in range(0,n_rounds):
             for i in range(0,5):
                 print(get_pM(languages[i]))
 
-    cost, interactions_per_agent, signal_entropies, meaning_entropies = initialize_round(n_agents)
 
+    signal_entropies = init_signal_entropies(n_agents)
+    meaning_entropies = init_meaning_entropy_sums(n_agents)
     # each agent makes their own proposal distribution
     
     # PROPOSE
-    proposals = propose_pMfixed(n_agents,n_signals,n_meanings,languages)
+    if proposal_protocol == "pm_fixed":
+        proposals = propose_pMfixed(n_agents,n_signals,n_meanings,languages)
 
     ############################################################################
-    
-
-
+    jobs = []
     for k in range(0,n_interactions):
-        """
-        # NEED TO UNDERSTAND MORE ABOUT HOW MANY INTERACTIONS per pair, per person, etc.
-        sender,receiver=find_sender_and_receiver(n_agents)
-        
-        signal_produced, meaning_intended = produce_signal(sender,proposals,n_meanings,n_signals)
 
-        ## I WONDER WHETHER WE WANT TO INTRODUCE NOISE TO THE SIGNAL, SO LEAVE THIS OUTSIDE OF FUNCTION
-        ## LIKE a function for infer signal, which could have various types of noise
-        signal_received = signal_produced
+        if communication_protocol == "original":
+            """
+            cost,total_cost,interactions_per_agent = communication(interactions_per_agent,n_agents,proposals,n_meanings,n_signals,cost,total_cost)        
+            """
+            p = multiprocessing.Process(target=A.communication,args=(r,proposals))
+            jobs.append(p)
+            p.start()
+            #A.communication(r,proposals)
 
-        # receiver infers a meaning for that signal
-        # by randomly selecting a meaning from their proposal distribution, 
-        # according to their meaning weights for the signal they received.
-        meaning_inferred = infer_meaning(receiver,proposals,signal_received,n_meanings)
-             
-        # update success rating
-        # for starters, the cost function is just tally of successful interactions,
-        # but it'll probably be some negative cost later
-        interactions_per_agent[sender] += 1
-        interactions_per_agent[receiver] += 1
-        
-        if meaning_intended == meaning_inferred:
-            cost[sender] += 1
-            cost[receiver] += 1
-            total_cost[sender] += 1
-            total_cost[receiver] += 1
-        """
-        cost,total_cost,interactions_per_agent = communication(interactions_per_agent,n_agents,proposals,n_meanings,n_signals,cost,total_cost)        
+
         # end of interactions loop
-     
-                
+    cost = A.cost[r]
+    #print(cost)
+    interactions_per_agent = A.interactions_per_agent[r]
+    #print(interactions_per_agent)         
     # use success rating to determine what agents do with their proposal distributions
     # for starters, if >= x% of an agents interactions were successful, they keep the proposal distribution,
     # and if < x% were successful, they don't adopt the proposal distribution (they revert back to their previous language instead).
@@ -108,10 +96,8 @@ for r in range(0,n_rounds):
     ## If receiver thinks they understand meaning?
     
     # EVALUATE
-    #languages,threshold = evaluate_fixed_threshold(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
+    languages,threshold = evaluate_fixed_threshold(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
     #languages,threshold_last_round = evaluate(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
-    languages,threshold = evaluate_based_on_prior_round(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
-
 
     ############################################################################
     # analyses per round
@@ -157,6 +143,7 @@ for r in range(0,n_rounds):
 
 
 # plot stuff
+
 import matplotlib.pyplot as plt
 
 plt.plot(successes_per_round, 'grey', linewidth=2.0)
