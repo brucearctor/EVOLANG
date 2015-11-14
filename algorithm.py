@@ -32,7 +32,7 @@ signal_entropy_sums = init_signal_entropy_sums(n_rounds)
 meaning_entropy_sums = init_meaning_entropy_sums(n_rounds)
 languages = languages(n_signals,n_meanings,n_agents)
 threshold = init_threshold(n_agents,initial_threshold)
-threshold_last_round = threshold
+#threshold_last_round = threshold
 
 ################################################################################
 # MAIN LOOP
@@ -42,7 +42,7 @@ final_round_number = n_rounds-1
 for r in range(0,n_rounds):
     
     #print("round: " +str(r))
-    #print(threshold)
+
     if logging == 'stuff':
         if(r == 0 or r == 1 or r == final_round_number):
             if r == 0:
@@ -75,11 +75,11 @@ for r in range(0,n_rounds):
             """
             cost,total_cost,interactions_per_agent = communication(interactions_per_agent,n_agents,proposals,n_meanings,n_signals,cost,total_cost)        
             """
-            p = multiprocessing.Process(target=A.communication,args=(r,proposals))
+            p = multiprocessing.Process(target=A.communication(r,proposals))
             jobs.append(p)
             p.start()
             #A.communication(r,proposals)
-
+            #print(A.cost[r])
 
         # end of interactions loop
     cost = A.cost[r]
