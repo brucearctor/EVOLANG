@@ -56,7 +56,7 @@ for r in range(0,n_rounds):
                 print(get_pM(languages[i]))
             print("pSs:")
             for i in range(0,5):
-                print(get_pM(languages[i]))
+                print(get_pS(languages[i]))
 
 
     signal_entropies = init_signal_entropies(n_agents)
