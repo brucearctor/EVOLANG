@@ -21,6 +21,7 @@ class A():
 	n_meanings = parameter_setup.n_meanings
 	n_signals = parameter_setup.n_signals
 
+	accepted = 0
 
 	cost,interactions_per_agent = init_parrallel(n_agents,n_rounds)
 
@@ -49,11 +50,6 @@ class A():
 	    if meaning_intended == meaning_inferred:
 	        self.cost[round][sender] += 1
 	        self.cost[round][receiver] += 1
-	        #self.total_cost[round][sender] += 1
-	        #self.total_cost[round][receiver] += 1
-
-	    #return()
-
 
 
 

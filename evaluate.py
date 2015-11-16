@@ -46,7 +46,7 @@ def evaluate_fixed_threshold(n_agents,cost,interactions_per_agent,languages,thre
             decision_to_keep[i] = "false"
 
     languages = update_language(n_agents,decision_to_keep,languages,proposals)
-    return(languages,threshold)
+    return(languages,threshold,decision_to_keep)
 
 
 def update_language(n_agents,decision_to_keep,languages,proposals):                    

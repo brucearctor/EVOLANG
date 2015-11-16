@@ -13,6 +13,8 @@ from evaluate import *
 #from copy import deepcopy
 #from KL_divergence import *
 from parrallel_try import A
+import time
+t0 = time.time()
 
 n_rounds = parameter_setup.n_rounds
 n_agents = parameter_setup.n_agents
@@ -24,6 +26,27 @@ logging = parameter_setup.logging
 proposal_protocol = parameter_setup.proposal_protocol
 communication_protocol = parameter_setup.communication_protocol
 evaluation_protocol = parameter_setup.evaluation_protocol
+
+print("n_rounds")
+print(n_rounds)
+print("n_agents")
+print(n_agents)
+print("n_signals")
+print(n_signals)
+print("n_meanings")
+print(n_meanings)
+print("n_interactions")
+print(n_interactions)
+print("initial_threshold")
+print(initial_threshold)
+print("proposal_protocol")
+print(proposal_protocol)
+print("communication_protocol")
+print(communication_protocol)
+print("evaluation_protocol")
+print(evaluation_protocol)
+
+
 
 ## THIS COULD BE A SINGLE LINE, but I think this is clearer
 successes_per_round = successes_per_round(n_rounds)
@@ -37,25 +60,26 @@ threshold = init_threshold(n_agents,initial_threshold)
 ################################################################################
 # MAIN LOOP
 
-final_round_number = n_rounds-1
+#final_round_number = n_rounds-1
+
+print("")
 
 for r in range(0,n_rounds):
     
     #print("round: " +str(r))
 
     if logging == 'stuff':
-        if(r == 0 or r == 1 or r == final_round_number):
-            if r == 0:
-                print("")
-                print("the random initial language:")
-                print(languages[0])
+        if(r == 0):
+            print("")
+            print("the random initial language:")
+            print(languages[0])
             print("")
             print("round: " +str(r))
             print("pMs:")
-            for i in range(0,5):
+            for i in range(len(languages)):
                 print(get_pM(languages[i]))
             print("pSs:")
-            for i in range(0,5):
+            for i in range(len(languages)):
                 print(get_pS(languages[i]))
 
 
@@ -83,7 +107,6 @@ for r in range(0,n_rounds):
 
         # end of interactions loop
     cost = A.cost[r]
-    #print(cost)
     interactions_per_agent = A.interactions_per_agent[r]
     #print(interactions_per_agent)         
     # use success rating to determine what agents do with their proposal distributions
@@ -96,7 +119,16 @@ for r in range(0,n_rounds):
     ## If receiver thinks they understand meaning?
     
     # EVALUATE
-    languages,threshold = evaluate_fixed_threshold(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
+    languages,threshold,decision_to_keep = evaluate_fixed_threshold(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
+    
+
+    if(r%10==0):
+        print("cost")
+        print(cost)
+        print("decision_to_keep")
+        print(decision_to_keep)
+        print("languages")
+        print(languages)
     #languages,threshold_last_round = evaluate(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
 
     ############################################################################
@@ -141,7 +173,10 @@ for r in range(0,n_rounds):
 
 ################################################################################
 
+t1 = time.time()
 
+print("total time")
+print(str(t1-t0))
 # plot stuff
 
 import matplotlib.pyplot as plt
@@ -153,3 +188,7 @@ plt.plot(meaning_entropy_sums, 'blue') # entropy of signals per meaning
 plt.plot([max_ent_sum(n_signals,n_meanings)[0]*n_agents]*n_rounds, 'black', linestyle="--", linewidth=1)
 plt.plot([max_ent_sum(n_signals,n_meanings)[1]*n_agents]*n_rounds, 'blue', linestyle="--", linewidth=1)
 plt.show()
+
+
+
+
