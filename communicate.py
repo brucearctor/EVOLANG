@@ -16,11 +16,11 @@ def produce_signal(sender,proposals,n_meanings,n_signals):
     # (couldn't figure out how to do a random sample from a 2D array, so did this in two steps)
     # 1) choose meaning first:
     weights = get_pM(proposals[sender])
-    print(weights)
     meaning_intended = numpy.random.choice(range(0,n_meanings),p=weights)
     # 2) then choose a signal for this meaning:
     prelim_weights = proposals[sender][:,meaning_intended]
     weights = prelim_weights/numpy.sum(prelim_weights)
+    #print(weights)
     signal_produced = numpy.random.choice(range(0,n_signals),p=weights)
     # >>> option: there could be noise so that the signal received isn't necessarily the signal produced.
     ## IN THIS FUNCTION, noise would be things like freudian slips, or mis-pronounciations?  
@@ -36,6 +36,7 @@ def infer_meaning(receiver,proposals,signal_received,n_meanings):
     prelim_weights = proposals[receiver][signal_received]
     weights = prelim_weights/numpy.sum(prelim_weights)
     meaning_inferred = numpy.random.choice(range(0,n_meanings),p=weights)
+
     return(meaning_inferred)
 
 class C_C():

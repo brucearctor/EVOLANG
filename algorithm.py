@@ -25,7 +25,7 @@ logging = parameter_setup.logging
 proposal_protocol = parameter_setup.proposal_protocol
 communication_protocol = parameter_setup.communication_protocol
 evaluation_protocol = parameter_setup.evaluation_protocol
-
+"""
 print("n_rounds:")
 print(n_rounds)
 print("n_agents:")
@@ -44,7 +44,7 @@ print("communication_protocol:")
 print(communication_protocol)
 print("evaluation_protocol:")
 print(evaluation_protocol)
-
+"""
 
 ## THIS COULD BE A SINGLE LINE, but I think this is clearer
 successes_per_round = successes_per_round(n_rounds)
@@ -63,7 +63,7 @@ threshold = init_threshold(n_agents,initial_threshold)
 print("")
 
 for r in range(0,n_rounds):
-    
+    """
     #print("round: " +str(r))
     if logging == 'stuff':
         if(r == 0):
@@ -78,7 +78,7 @@ for r in range(0,n_rounds):
             print("pSs:")
             for i in range(len(languages)):
                 print(get_pS(languages[i]))
-
+    """
 
     signal_entropies = init_signal_entropies(n_agents)
     meaning_entropies = init_meaning_entropy_sums(n_agents)
@@ -112,6 +112,7 @@ for r in range(0,n_rounds):
     languages,threshold,decision_to_keep = evaluate_fixed_threshold(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
     
     # MORE PRINTING!
+    """
     if(r%10==0):
         print("cost")
         print(cost)
@@ -119,7 +120,7 @@ for r in range(0,n_rounds):
         print(decision_to_keep)
         print("languages")
         print(languages)
-
+    """
     ############################################################################
     # analyses per round
 
