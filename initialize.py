@@ -15,7 +15,6 @@ def languages(n_signals,n_meanings,n_agents):
 	return(languages)
 
 
-
 # other stuff to initialize here:
 def total_cost(n_agents):
 	return([0]*n_agents)
@@ -39,14 +38,11 @@ def init_threshold(n_agents,threshold):
 		threshold_array.append(threshold)
 	return(threshold_array)
 
-
 def init_threshold_last_round(n_agents):
 	threshold_last_round_array = []
 	for i in range(0,n_agents):
 		threshold_last_round_array.append(0)
 	return(threshold_last_round_array)
-
-
 
 
 def init_cost(n_agents):
@@ -62,14 +58,12 @@ def init_meaning_entropies(n_agents):
     return([0]*n_agents)
 
 
-
 ### PROBABLY DELETE THIS
 def initialize_round(n_agents):
 	return(init_cost(n_agents),init_interactions_per_agent(n_agents),init_signal_entropies(n_agents),init_meaning_entropies(n_agents))
 
-
+"""
 def init_parrallel(n_agents,n_rounds):
-
     cost = {}
     #total_cost = {}
     interactions_per_agent = {}
@@ -83,5 +77,5 @@ def init_parrallel(n_agents,n_rounds):
 		#meaning_entropies[i] = init_meaning_entropy_sums(n_agents)
 
     return(cost,interactions_per_agent)
-
+"""
 

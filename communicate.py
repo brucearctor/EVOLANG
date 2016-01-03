@@ -3,6 +3,7 @@ from sketch_functions import get_pM
 import parameter_setup
 from initialize import init_parrallel
 
+
 def find_sender_and_receiver(n_agents):
 	pair = numpy.random.choice(n_agents,2,replace=False)
 	sender = pair[0]
@@ -32,11 +33,9 @@ def infer_meaning(receiver,proposals,signal_received,n_meanings):
     # receiver infers a meaning for that signal
     # by randomly selecting a meaning from their proposal distribution, 
     # according to their meaning weights for the signal they received.
-    
     prelim_weights = proposals[receiver][signal_received]
     weights = prelim_weights/numpy.sum(prelim_weights)
     meaning_inferred = numpy.random.choice(range(0,n_meanings),p=weights)
-
     return(meaning_inferred)
 
 class C_C():
