@@ -1,9 +1,6 @@
 import numpy
 from sketch_functions import random_matrix_maker
 
-#threshold = setup.threshold
-# proportion successful interactions an agent needs to have to keep their proposal distribution
-
 
 def pM_init(n_meanings):
 	return(numpy.random.randint(1,100,size=n_meanings))
@@ -66,14 +63,9 @@ def init_meaning_entropies(n_agents):
 
 
 
-
-
 ### PROBABLY DELETE THIS
 def initialize_round(n_agents):
 	return(init_cost(n_agents),init_interactions_per_agent(n_agents),init_signal_entropies(n_agents),init_meaning_entropies(n_agents))
-
-
-
 
 
 def init_parrallel(n_agents,n_rounds):

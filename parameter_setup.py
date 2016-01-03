@@ -2,7 +2,6 @@
 ## If potential many types of evaluation, include a variable here to select which evaluation function
 
 
-
 # number of agents in the population
 n_agents = 100
 

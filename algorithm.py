@@ -4,7 +4,7 @@ import multiprocessing
 ## Should more specifically import (instead of *) ??
 import parameter_setup
 from initialize import *
-from communicate import communication
+from communicate import C_C
 from propose import *
 from sketch_functions import *
 import numpy
@@ -12,7 +12,6 @@ import scipy, scipy.stats
 from evaluate import *
 #from copy import deepcopy
 #from KL_divergence import *
-from parrallel_try import A
 import time
 t0 = time.time()
 
@@ -27,25 +26,24 @@ proposal_protocol = parameter_setup.proposal_protocol
 communication_protocol = parameter_setup.communication_protocol
 evaluation_protocol = parameter_setup.evaluation_protocol
 
-print("n_rounds")
+print("n_rounds:")
 print(n_rounds)
-print("n_agents")
+print("n_agents:")
 print(n_agents)
-print("n_signals")
+print("n_signals:")
 print(n_signals)
-print("n_meanings")
+print("n_meanings:")
 print(n_meanings)
-print("n_interactions")
+print("n_interactions:")
 print(n_interactions)
-print("initial_threshold")
+print("initial_threshold:")
 print(initial_threshold)
-print("proposal_protocol")
+print("proposal_protocol:")
 print(proposal_protocol)
-print("communication_protocol")
+print("communication_protocol:")
 print(communication_protocol)
-print("evaluation_protocol")
+print("evaluation_protocol:")
 print(evaluation_protocol)
-
 
 
 ## THIS COULD BE A SINGLE LINE, but I think this is clearer
@@ -67,7 +65,6 @@ print("")
 for r in range(0,n_rounds):
     
     #print("round: " +str(r))
-
     if logging == 'stuff':
         if(r == 0):
             print("")
@@ -90,29 +87,22 @@ for r in range(0,n_rounds):
     # PROPOSE
     if proposal_protocol == "pm_fixed":
         proposals = propose_pMfixed(n_agents,n_signals,n_meanings,languages)
+    elif proposal_protocol == "something_else":
+        proposals = propose_someotherway(stuff)
+    else:
+        proposals = default
 
     ############################################################################
     jobs = []
     for k in range(0,n_interactions):
 
         if communication_protocol == "original":
-            """
-            cost,total_cost,interactions_per_agent = communication(interactions_per_agent,n_agents,proposals,n_meanings,n_signals,cost,total_cost)        
-            """
-            p = multiprocessing.Process(target=A.communication(r,proposals))
+            p = multiprocessing.Process(target=C_C.communication(r,proposals))
             jobs.append(p)
             p.start()
-            #A.communication(r,proposals)
-            #print(A.cost[r])
 
-        # end of interactions loop
-    cost = A.cost[r]
-    interactions_per_agent = A.interactions_per_agent[r]
-    #print(interactions_per_agent)         
-    # use success rating to determine what agents do with their proposal distributions
-    # for starters, if >= x% of an agents interactions were successful, they keep the proposal distribution,
-    # and if < x% were successful, they don't adopt the proposal distribution (they revert back to their previous language instead).
-    
+    cost = C_C.cost[r]
+    interactions_per_agent = C_C.interactions_per_agent[r]
     ## Definition of success?
     ## Objective, or subjective to receiver
     ## Room for corrections?
@@ -121,7 +111,7 @@ for r in range(0,n_rounds):
     # EVALUATE
     languages,threshold,decision_to_keep = evaluate_fixed_threshold(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
     
-
+    # MORE PRINTING!
     if(r%10==0):
         print("cost")
         print(cost)
@@ -129,7 +119,6 @@ for r in range(0,n_rounds):
         print(decision_to_keep)
         print("languages")
         print(languages)
-    #languages,threshold_last_round = evaluate(n_agents,cost,interactions_per_agent,languages,threshold,proposals)
 
     ############################################################################
     # analyses per round
